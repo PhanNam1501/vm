@@ -53,8 +53,24 @@ int getLine(Chunk* chunk,  int instructionIndex) {
 }
 
 int addConstant(Chunk* chunk, Value value) {
+    printf("%f\n", value);
     writeValueArray(&chunk->constants, value);
     return chunk->constants.count - 1;//index
+}
+
+void writeConstant(Chunk* chunk, Value value, int line) {
+    int constant = addConstant(chunk, value);
+
+    if (value <= UINT8_MAX) {
+        writeChunk(chunk, OP_CONSTANT, value);
+        writeChunk(chunk, constant, line);
+    } else {
+        writeChunk(chunk,  OP_CONSTANT_LONG, value);
+
+        writeChunk(chunk, (constant >> 0) & 0xFF, line);
+        writeChunk(chunk, (constant >> 8) & 0xFF, line);
+        writeChunk(chunk, (constant >> 16) & 0xFF, line);
+    }
 }
 
 void freeChunk(Chunk* chunk) {

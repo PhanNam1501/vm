@@ -18,7 +18,6 @@ void writeValueArray(ValueArray* array, Value value) {
     } 
 
     array->values[array->count] = value;
-    printf("%4d \n", value);
     array->count++;
 }
 
